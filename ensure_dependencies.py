@@ -128,6 +128,10 @@ class Git:
         subprocess.check_call(['git', 'checkout', '--quiet', revname], cwd=repo)
 
     def ignore(self, target, repo):
+        exclude_dir = os.path.join(repo, '.git', 'info')
+        if not os.path.isdir(exclude_dir):
+            logging.warning("Directory %s doesn't exist, skipping ignore check" % exclude_dir)
+            return
         module = os.path.sep + os.path.relpath(target, repo)
         exclude_file = os.path.join(repo, '.git', 'info', 'exclude')
         _ensure_line_exists(exclude_file, module)
